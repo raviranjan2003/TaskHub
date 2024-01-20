@@ -1,4 +1,6 @@
 const express = require('express');
-const app = express();
+const router = express.Router();
 
-app.use("/auth",require('./authentication'));
+router.use("/auth",require('./authentication'));
+
+module.exports = router;
