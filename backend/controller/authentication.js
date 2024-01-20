@@ -9,6 +9,10 @@ module.exports.SignUp = async (req, res) => {
         if (existingUser) {
             return res.status(200).json({ message: "Email already registered !" });
         }
+        const uniqueUserName = await User.findOne({ username });
+        if(uniqueUserName){
+            return res.status(200).json({ message: "Username taken, try different !" });
+        }
         bcrypt.hash(password, saltRounds, async (err, result) => {
             if (!err) {
                 const newUser = new User({
@@ -42,7 +46,6 @@ module.exports.SignIn = async (req, res) => {
     bcrypt.compare(password, user.password, function (err, result) {
         if (!err) {
             if (result) {
-                console.log("User Logged In !");
                 res.status(200).json({ message: "User Logged In!" });
             }else{
                 res.status(401).json({ message: "Invalid Credentials!" });
