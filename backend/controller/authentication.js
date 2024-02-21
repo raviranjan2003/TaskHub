@@ -48,7 +48,6 @@ module.exports.SignIn = async (req, res) => {
     bcrypt.compare(password, userDetails.password, function (err, result) {
         if (!err) {
             const token = jwt.sign({id:userDetails._id, email:userDetails.email},SECRET_KEY);
-            console.log(token);
             const user = {
                 _id : userDetails._id,
                 username : userDetails.username,
