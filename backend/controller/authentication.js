@@ -1,6 +1,8 @@
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const User = require('../model/users');
+const jwt = require('jsonwebtoken');
+const SECRET_KEY = "Thisismysecretkey";
 
 module.exports.SignUp = async (req, res) => {
     const { name, username, email, password } = req.body;
@@ -45,11 +47,14 @@ module.exports.SignIn = async (req, res) => {
     }
     bcrypt.compare(password, userDetails.password, function (err, result) {
         if (!err) {
+            const token = jwt.sign({id:userDetails._id, email:userDetails.email},SECRET_KEY);
+            console.log(token);
             const user = {
                 _id : userDetails._id,
                 username : userDetails.username,
                 name : userDetails.name,
-                email : userDetails.email
+                email : userDetails.email,
+                token
             }
             if (result) {
                 res.status(200).json({ message: "User Logged In!", user });
