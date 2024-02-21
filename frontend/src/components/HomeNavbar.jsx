@@ -33,7 +33,7 @@ export default function HomeNavbar() {
         email : userInfo.email
       })
     }
-  })
+  },[])
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
