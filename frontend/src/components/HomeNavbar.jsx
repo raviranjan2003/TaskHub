@@ -23,6 +23,11 @@ export default function HomeNavbar() {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const handleLogOut = () =>{
+    setAnchorEl(null);
+    localStorage.removeItem("user-todolist");
+  }
   React.useEffect(()=>{
     const userInfo = JSON.parse(localStorage.getItem('user-todolist'));
     if(userInfo){
@@ -77,7 +82,7 @@ export default function HomeNavbar() {
                 onClose={handleClose}
               >
                 <MenuItem onClick={handleClose}>Profile</MenuItem>
-                <MenuItem onClick={handleClose}>Log Out</MenuItem>
+                <MenuItem onClick={handleLogOut}>Log Out</MenuItem>
               </Menu>
         </Toolbar>
       </AppBar>

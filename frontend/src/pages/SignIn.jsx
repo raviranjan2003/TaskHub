@@ -46,12 +46,6 @@ export default function SignIn() {
       const result = response.data.user;
       // console.log("Response==> ", response.data);
       if(response.status === 200) {
-        user.setUser({
-          _id : result._id,
-          username : result.username,
-          name : result.name,
-          email : result.email
-        })
         localStorage.setItem('user-todolist',JSON.stringify(result));
         navigate('/');
       }
