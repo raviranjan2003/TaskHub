@@ -13,7 +13,9 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { useAuth } from '../context/authContext';
 
 function Copyright(props) {
   return (
@@ -33,11 +35,30 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export default function SignIn() {
+  const navigate = useNavigate();
+  const user = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log("HandleSubmit signin !!");
+    axios.post("http://localhost:8000/auth/sign-in", {email, password})
+    .then(response => {
+      const result = response.data.user;
+      // console.log("Response==> ", response.data);
+      if(response.status === 200) {
+        user.setUser({
+          _id : result._id,
+          username : result.username,
+          name : result.name,
+          email : result.email
+        })
+        localStorage.setItem('user-todolist',JSON.stringify(result));
+        navigate('/');
+      }
+    })
+    .catch(err => {
+      console.log(err);
+    })
   };
 
   return (
@@ -67,6 +88,7 @@ export default function SignIn() {
               label="Email Address"
               name="email"
               autoComplete="email"
+              onChange={e => setEmail(e.target.value)}
               autoFocus
             />
             <TextField
@@ -77,6 +99,7 @@ export default function SignIn() {
               label="Password"
               type="password"
               id="password"
+              onChange={e => setPassword(e.target.value)}
               autoComplete="current-password"
             />
             <FormControlLabel
