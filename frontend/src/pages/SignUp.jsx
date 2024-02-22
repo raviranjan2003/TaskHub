@@ -38,12 +38,13 @@ export default function SignUp() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const baseUrl = "https://taskhub-ef9r.onrender.com";
   const handleSubmit = (event) => {
     event.preventDefault();
     const userData = { name,username, email, password };
     console.log({name,username, email, password});
     // console.log("HandleSubmit signin !!");
-    axios.post("http://localhost:8000/auth/sign-up",userData)
+    axios.post(`${baseUrl}/auth/sign-up`,userData)
     .then(res =>{
       console.log("Response from signup endpoints"+JSON.stringify(res.data));
       console.dir(res.data.email, { depth: null });
