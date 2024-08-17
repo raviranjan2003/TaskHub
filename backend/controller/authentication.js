@@ -83,3 +83,7 @@ module.exports.SignIn = async (req, res) => {
     }
     // res.send("success");
 }
+
+module.exports.GetUser = async (req, res) => {
+    res.status(200).json(req.user);
+}
