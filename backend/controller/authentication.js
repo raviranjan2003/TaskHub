@@ -41,28 +41,33 @@ module.exports.SignUp = async (req, res) => {
 
 module.exports.SignIn = async (req, res) => {
     const { email, password } = req.body;
-    const userDetails = await User.findOne({ email });
-    if (!userDetails) {
-        return res.status(200).json({ message: "User not found !" });
-    }
-    bcrypt.compare(password, userDetails.password, function (err, result) {
-        if (!err) {
-            const token = jwt.sign({id:userDetails._id, email:userDetails.email},SECRET_KEY);
-            const user = {
-                _id : userDetails._id,
-                username : userDetails.username,
-                name : userDetails.name,
-                email : userDetails.email,
-                token
-            }
-            if (result) {
-                res.status(200).json({ message: "User Logged In!", user });
-            }else{
-                res.status(401).json({ message: "Invalid Credentials!" });
-            }
-        } else {
-            res.status(501).json(err);
+    try {
+        const userDetails = await User.findOne({ email });
+
+        if (!userDetails) {
+            return res.status(200).json({ message: "User not found !" });
         }
-    })
+        bcrypt.compare(password, userDetails.password, function (err, result) {
+            if (!err) {
+                const token = jwt.sign({id:userDetails._id, email:userDetails.email},SECRET_KEY);
+                const user = {
+                    _id : userDetails._id,
+                    username : userDetails.username,
+                    name : userDetails.name,
+                    email : userDetails.email,
+                    token
+                }
+                if (result) {
+                    res.status(200).json({ message: "User Logged In!", user });
+                }else{
+                    res.status(401).json({ message: "Invalid Credentials!" });
+                }
+            } else {
+                res.status(501).json(err);
+            }
+        })
+    } catch (error) {
+        res.status(500).json({ message : "Something Went Wrong !"});
+    }
     // res.send("success");
 }
